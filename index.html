@@ -267,8 +267,6 @@ function setText(id, value) {
 document.getElementById(id).textContent = value == null ? "" : String(value);			
 }			
 	
-let globalMaterials = [];
-
     // Fungsi dipanggil saat halaman dimuat atau jenis pengajuan diganti
     async function loadMaterials() {
       const jenis = document.getElementById("jenisPengajuan").value;
