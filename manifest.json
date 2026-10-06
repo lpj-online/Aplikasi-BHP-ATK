@@ -1,14 +1,15 @@
-name: "E-Form ATK & BHP ",
-short_name: "ATK & BHPMaranatha",
-start_url: "./index.html",
-display: "standalone",
-background_color: "#f0f4f8",
-theme_color: "#0056b3",
-icons: [
 {
-src: "https://lh3.googleusercontent.com/d/1VKMKh6fmDqEas-BuYzU5WD_K9rGv6Zkz",
-sizes: "192x192",
-type: "image/png"
-}
-]
+  "name": "E-Form ATK Triwulan",
+  "short_name": "ATK Maranatha",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f0f4f8",
+  "theme_color": "#0056b3",
+  "icons": [
+    {
+     "src": "https://lh3.googleusercontent.com/d/13YmXc7ritCneXuycthkhfMb7fGzN3rzz",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
 }
