@@ -267,107 +267,106 @@ function setText(id, value) {
 document.getElementById(id).textContent = value == null ? "" : String(value);			
 }			
 	
-    // Fungsi dipanggil saat halaman dimuat atau jenis pengajuan diganti
     async function loadMaterials() {
-      const jenis = document.getElementById("jenisPengajuan").value;
-      const loader = document.getElementById("materialLoading");
-      const select = document.getElementById("dropdownMaterial");
-      
-      loader.style.display = "block";
-      select.style.display = "none";
-      
-      // Tentukan endpoint aksi berdasarkan pilihan
-      const actionName = (jenis === "bhp") ? "getMaterialBhp" : "getMaterial";
+const loader = document.getElementById("materialLoading");
+const select = document.getElementById("dropdownMaterial");
 
-      try {
-        const list = await fetchJson(WEB_APP_URL + "?action=" + actionName);
+try {
+const list = await fetchJson(WEB_APP_URL + "?action=getMaterial");
 
-        if (!Array.isArray(list)) {
-          throw new Error("Format data material tidak valid.");
-        }
+if (!Array.isArray(list)) {
+throw new Error("Format data material tidak valid.");
+}
 
-        globalMaterials = list;
-        select.replaceChildren();
+globalMaterials = list;
+select.replaceChildren();
 
-        const defaultOption = document.createElement("option");
-        defaultOption.value = "";
-        defaultOption.textContent = "-- Pilih Kode & Deskripsi --";
-        select.appendChild(defaultOption);
+const defaultOption = document.createElement("option");
+defaultOption.value = "";
+defaultOption.textContent = "-- Pilih Kode & Deskripsi --";
+select.appendChild(defaultOption);
 
-        list.forEach(item => {
-          const kode = String(item.kode ?? "");
-          const deskripsi = String(item.deskripsi ?? "");
-          const harga = Number(item.harga) || 0;
-          const vendor = String(item.vendor ?? "-"); 
-          const option = document.createElement("option");
+// Cukup satu kali perulangan yang lengkap dengan vendor dan harga
+list.forEach(item => {
+const kode = String(item.kode ?? "");
+const deskripsi = String(item.deskripsi ?? "");
+const harga = Number(item.harga) || 0;
+const vendor = String(item.vendor ?? "-");
+const option = document.createElement("option");
 
-          option.value = kode;
-          option.textContent = `${kode} - ${deskripsi} [Vendor: ${vendor}] (Rp ${harga.toLocaleString("id-ID")})`;
-          select.appendChild(option);
-        });
+option.value = kode;
+option.textContent = `${kode} - ${deskripsi} [Vendor: ${vendor}] (Rp ${harga.toLocaleString("id-ID")})`;
+select.appendChild(option);
+});
 
-        loader.style.display = "none";
-        select.style.display = "block";
-      } catch (error) {
-        loader.textContent = "❌ Gagal memuat material.";
-        console.error(error);
-      }
-    }
+loader.style.display = "none";
+select.style.display = "block";
+} catch (error) {
+loader.textContent = "❌ Gagal memuat material.";
+console.error(error);
+}
+}
+async function loadUnits() {
+const loader = document.getElementById("unitLoading");
+const select = document.getElementById("dropdownUnit");
 
-    function gantiJenisPengajuan() {
-      // Reset input terkait saat jenis diganti
-      document.getElementById("dropdownMaterial").value = "";
-      updateMaterialMeta();
-      loadMaterials();
-    }
+try {
+const list = await fetchJson(WEB_APP_URL + "?action=getUnit");
 
-    function updateMaterialMeta() {
-      const value = document.getElementById("dropdownMaterial").value;
-      const item = globalMaterials.find(material => String(material.kode) === String(value));
-      const imgContainer = document.getElementById("previewGambarContainer");
-      const imgElement = document.getElementById("previewGambar");
+if (!Array.isArray(list)) {
+throw new Error("Format data unit tidak valid.");
+}
 
-      if (!item) {
-        ["vendorTarget", "deskripsiBarang", "satuanBarang", "merkBarang", "hargaBarang"].forEach(id => {
-          const el = document.getElementById(id);
-          if(el) el.value = "";
-        });
-        setText("vendorBadge", "");
-        if(imgContainer) imgContainer.style.display = "none";
-        if(imgElement) imgElement.src = "";
-        return;
-      }
+globalUnits = list;
+select.replaceChildren();
 
-      const harga = Number(item.harga) || 0;
+const defaultOption = document.createElement("option");
+defaultOption.value = "";
+defaultOption.textContent = "-- Pilih Unit Kerja Anda --";
+select.appendChild(defaultOption);
 
-      // Masukkan ke form tersembunyi/input aktif Anda
-      if(document.getElementById("vendorTarget")) document.getElementById("vendorTarget").value = item.vendor ?? "";
-      if(document.getElementById("deskripsiBarang")) document.getElementById("deskripsiBarang").value = item.deskripsi ?? "";
-      if(document.getElementById("satuanBarang")) document.getElementById("satuanBarang").value = item.satuan ?? "";
-      if(document.getElementById("merkBarang")) document.getElementById("merkBarang").value = item.merk ?? "";
-      if(document.getElementById("hargaBarang")) document.getElementById("hargaBarang").value = harga;
+list.forEach(item => {
+const namaUnit = String(item.namaUnit ?? "");
+const option = document.createElement("option");
 
-      setText(
-        "vendorBadge",
-        `🏢 Vendor: ${item.vendor ?? "-"} | 💰 Harga: Rp ${harga.toLocaleString("id-ID")}`
-      );
+option.value = namaUnit;
+option.textContent = namaUnit;
+select.appendChild(option);
+});
 
-      // Tampilkan gambar produk jika link gambar (Kolom I) tersedia
-      if (imgContainer && imgElement) {
-        if (item.gambar && item.gambar.startsWith("http")) {
-          imgElement.src = item.gambar;
-          imgContainer.style.display = "block";
-        } else {
-          imgContainer.style.display = "none";
-          imgElement.src = "";
-        }
-      }
-    }
+loader.style.display = "none";
+select.style.display = "block";
+} catch (error) {
+loader.textContent = "❌ Gagal memuat unit.";
+console.error(error);
+}
+}
 
-    // Panggil saat pertama kali halaman dibuka
-    window.addEventListener("DOMContentLoaded", () => {
-      loadMaterials();
-    });
+function updateMaterialMeta() {
+const value = document.getElementById("dropdownMaterial").value;
+const item = globalMaterials.find(material => String(material.kode) === String(value));
+
+if (!item) {
+["vendorTarget", "deskripsiBarang", "satuanBarang", "merkBarang", "hargaBarang"]
+.forEach(id => document.getElementById(id).value = "");
+
+setText("vendorBadge", "");
+return;
+}
+
+const harga = Number(item.harga) || 0;
+
+document.getElementById("vendorTarget").value = item.vendor ?? "";
+document.getElementById("deskripsiBarang").value = item.deskripsi ?? "";
+document.getElementById("satuanBarang").value = item.satuan ?? "";
+document.getElementById("merkBarang").value = item.merk ?? "";
+document.getElementById("hargaBarang").value = harga;
+
+setText(
+"vendorBadge",
+`🏢 Vendor: ${item.vendor ?? "-"} | 💰 Harga: Rp ${harga.toLocaleString("id-ID")}`
+);
+}
 	
 function updateUnitMeta() {			
 const value = document.getElementById("dropdownUnit").value;			
