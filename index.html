@@ -174,7 +174,14 @@
 
             <input type="hidden" id="lokasiUnit">
           </div>
-
+  <!-- Pilihan Jenis Pengajuan (ATK atau BHP) -->
+          <div class="mb-3">
+            <label class="form-label mb-2">📂 Jenis Pengajuan</label>
+            <select id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
+              <option value="atk">ATK (Alat Tulis Kantor)</option>
+              <option value="bhp">BHP (Bahan / Barang Habis Pakai Kedokteran Gigi)</option>
+            </select>
+          </div>
           <div class="inner-card mb-4">
             <h6 class="fw-bold text-dark mb-3">
               <span class="badge bg-primary me-2">Step 2</span>
@@ -205,15 +212,6 @@
               <label class="form-label small mb-1">🔢 Jumlah Permintaan</label>
               <input type="number" id="jumlah" class="form-control shadow-sm" min="1" step="1" placeholder="Masukkan jumlah angka">
             </div>
-
-            <!-- Pilihan Jenis Pengajuan (ATK atau BHP) -->
-          <div class="mb-3">
-            <label class="form-label mb-2">📂 Jenis Pengajuan</label>
-            <select id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
-              <option value="atk">ATK (Alat Tulis Kantor)</option>
-              <option value="bhp">BHP (Bahan / Barang Habis Pakai Kedokteran Gigi)</option>
-            </select>
-          </div>
             
             <button type="button" id="btnAdd" class="btn btn-add w-100 fw-bold shadow-sm mt-2">
               ➕ Masukkan ke Keranjang
