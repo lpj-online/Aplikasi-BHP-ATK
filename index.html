@@ -284,7 +284,8 @@
       document.getElementById(id).textContent = value == null ? "" : String(value);
     }
 
-    async function loadMaterials() {
+   async function loadMaterials() {
+      const jenis = document.getElementById("jenisPengajuan").value;
       const loader = document.getElementById("materialLoading");
       const select = document.getElementById("dropdownMaterial");
 
