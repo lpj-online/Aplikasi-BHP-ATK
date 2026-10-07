@@ -187,21 +187,31 @@
             <input type="hidden" id="merkBarang">
             <input type="hidden" id="hargaBarang">
 
-            <div class="mb-3">
-              <label class="form-label small mb-1">📦 Pilih Barang / Material</label>
+            <!-- Pilihan Jenis Pengajuan (ATK atau BHP) -->
+          <div class="mb-3">
+            <label class="form-label">📂 Jenis Pengajuan</label>
+            id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
+              <option value="atk">ATK (Alat Tulis Kantor)</option>
+              <option value="bhp">BHP (Bahan / Barang Habis Pakai Kedokteran Gigi)</option>
+            </select>
+          </div>
 
-              <div id="materialLoading" class="loading-overlay mb-2">
-                <div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
-                Memuat database material barang...
-              </div>
+          <!-- Dropdown Pilih Barang -->
+          <div class="mb-3">
+            <label class="form-label">📦 Pilih Barang / Material</label>
+            <div id="materialLoading" class="loading-overlay">Memuat data material...</div>
+            <select id="dropdownMaterial" class="form-select shadow-sm" style="display:none" onchange="updateMaterialMeta()">
+              <option value="">-- Pilih Kode & Deskripsi --</option>
+            </select>
 
-              <select id="dropdownMaterial" class="form-select shadow-sm" style="display:none">
-                <option value="">-- Pilih Kode & Deskripsi --</option>
-              </select>
-
-              <div id="vendorBadge" class="form-text text-primary fw-bold mt-2" style="font-size:.85rem"></div>
+            <!-- Area Pratinjau Gambar Barang -->
+            <div id="previewGambarContainer" class="mt-2 text-center" style="display:none;">
+              <img id="previewGambar" src="" alt="Preview Barang" class="img-thumbnail rounded shadow-sm" style="max-height: 130px; object-fit: contain;">
             </div>
 
+            <div id="vendorBadge" class="form-text text-success fw-bold mt-2" style="font-size:.85rem"></div>
+          </div>
+            
             <div class="mb-3">
               <label class="form-label small mb-1">🔢 Jumlah Permintaan</label>
               <input type="number" id="jumlah" class="form-control shadow-sm" min="1" step="1" placeholder="Masukkan jumlah angka">
