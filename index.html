@@ -188,14 +188,6 @@
             <input type="hidden" id="hargaBarang">
 
             <div class="mb-3">
-            <label class="form-label">📂 Jenis Pengajuan</label>
-            id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
-              <option value="atk">ATK (Alat Tulis Kantor)</option>
-              <option value="bhp">BHP (Bahan / Barang Habis Pakai Kedokteran Gigi)</option>
-            </select>
-          </div>
-
-            <div class="mb-3">
               <label class="form-label small mb-1">📦 Pilih Barang / Material</label>
               <div id="materialLoading" class="loading-overlay mb-2">
                 <div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
@@ -213,7 +205,14 @@
               <label class="form-label small mb-1">🔢 Jumlah Permintaan</label>
               <input type="number" id="jumlah" class="form-control shadow-sm" min="1" step="1" placeholder="Masukkan jumlah angka">
             </div>
-
+            
+ <div class="mb-3">
+            <label class="form-label">📂 Jenis Pengajuan</label>
+            id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
+              <option value="atk">ATK (Alat Tulis Kantor)</option>
+              <option value="bhp">BHP (Bahan / Barang Habis Pakai Kedokteran Gigi)</option>
+            </select>
+          </div>
             <button type="button" id="btnAdd" class="btn btn-add w-100 fw-bold shadow-sm mt-2">
               ➕ Masukkan ke Keranjang
             </button>
