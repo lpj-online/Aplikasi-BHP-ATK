@@ -319,6 +319,38 @@
 
         loader.style.display = "none";
         select.style.display = "block";
+     // Tentukan endpoint aksi berdasarkan pilihan
+      const actionName = (jenis === "bhp") ? "getMaterialBhp" : "getMaterial";
+
+      try {
+        const list = await fetchJson(WEB_APP_URL + "?action=" + actionName);
+
+        if (!Array.isArray(list)) {
+          throw new Error("Format data material tidak valid.");
+        }
+
+        globalMaterials = list;
+        select.replaceChildren();
+
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "-- Pilih Kode & Deskripsi --";
+        select.appendChild(defaultOption);
+
+        list.forEach(item => {
+          const kode = String(item.kode ?? "");
+          const deskripsi = String(item.deskripsi ?? "");
+          const harga = Number(item.harga) || 0;
+          const vendor = String(item.vendor ?? "-"); 
+          const option = document.createElement("option");
+
+          option.value = kode;
+          option.textContent = `${kode} - ${deskripsi} [Vendor: ${vendor}] (Rp ${harga.toLocaleString("id-ID")})`;
+          select.appendChild(option);
+        });
+
+        loader.style.display = "none";
+        select.style.display = "block";
       } catch (error) {
         loader.textContent = "❌ Gagal memuat material.";
         console.error(error);
