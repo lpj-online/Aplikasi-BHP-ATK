@@ -282,12 +282,19 @@
     }
 
     async function loadMaterials() {
-      const jenis = document.getElementById("jenisPengajuan").value;
+      const jenisEl = document.getElementById("jenisPengajuan");
+      const jenis = jenisEl ? jenisEl.value : "atk";
       const loader = document.getElementById("materialLoading");
       const select = document.getElementById("dropdownMaterial");
 
+      loader.style.display = "block";
+      select.style.display = "none";
+
+      // Pilih action backend sesuai pilihan dropdown
+      const actionName = (jenis === "bhp") ? "getMaterialBhp" : "getMaterial";
+
       try {
-        const list = await fetchJson(WEB_APP_URL + "?action=getMaterial");
+        const list = await fetchJson(WEB_APP_URL + "?action=" + actionName);
 
         if (!Array.isArray(list)) {
           throw new Error("Format data material tidak valid.");
@@ -301,7 +308,6 @@
         defaultOption.textContent = "-- Pilih Kode & Deskripsi --";
         select.appendChild(defaultOption);
 
-        // Cukup satu kali perulangan yang lengkap dengan vendor dan harga
         list.forEach(item => {
           const kode = String(item.kode ?? "");
           const deskripsi = String(item.deskripsi ?? "");
@@ -321,6 +327,12 @@
         console.error(error);
       }
     }
+
+    function gantiJenisPengajuan() {
+      document.getElementById("dropdownMaterial").value = "";
+      updateMaterialMeta();
+      loadMaterials();
+    } 
     
     async function loadUnits() {
       const loader = document.getElementById("unitLoading");
