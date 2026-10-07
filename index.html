@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0056b3">
-  <meta name="description" content="E-Form Permintaan ATK & BHP">
-  <title>"E-Form Permintaan ATK & BHP"</title>
+  <meta name="description" content="E-Form Permintaan ATK Triwulan">
+  <title>E-Form Permintaan ATK Triwulan</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="https://i.ibb.co.com/hR56HGdP/Logo-Maranatha-Universitas-Kristen-Maranatha-Original-PNG.png">
 
@@ -148,14 +148,15 @@
   <div class="main-container">
     <div class="card card-form">
       <div class="brand-header position-relative">
-        <div class="position-absolute top-0 start-0 p-3 text-white-50 small fw-semibold" style="font-size: 0.6875rem; opacity: 0.75;"> 
+        <div class="position-absolute top-0 start-0 p-3 text-white-50 small fw-semibold" style="font-size: 0.6875rem; opacity: 0.75;">
+          Created by DSP • 2026 
         </div>
         
         <div class="logo-container">
           <img src="https://i.ibb.co.com/hR56HGdP/Logo-Maranatha-Universitas-Kristen-Maranatha-Original-PNG.png" alt="Logo Maranatha">
         </div>
-        <h4 class="fw-bold mb-1">E-Form Permintaan BHP</h4>
-        <p class="mb-0 opacity-75 small">Request System</p>
+        <h4 class="fw-bold mb-1">E-Form Permintaan ATK Triwulan</h4>
+        <p class="mb-0 opacity-75 small">Stationery Request System</p>
       </div>
 
       <div class="form-section">
@@ -187,8 +188,7 @@
             <input type="hidden" id="merkBarang">
             <input type="hidden" id="hargaBarang">
 
-            <!-- Pilihan Jenis Pengajuan (ATK atau BHP) -->
-           <div class="mb-3">
+            <div class="mb-3">
               <label class="form-label small mb-1">📦 Pilih Barang / Material</label>
 
               <div id="materialLoading" class="loading-overlay mb-2">
@@ -240,12 +240,12 @@
         <div id="output" class="text-center mt-3"></div>
       </div>
       <footer class="bg-white border-top border-light mt-auto p-3 text-center text-muted small">
-        &copy; <span id="current-year"></span> Sistem Aplikasi Permintaan BHP. Data disimpan secara Aman di Google Drive (By Jeffry).
+        &copy; <span id="current-year"></span> Sistem Aplikasi Permintaan ATK. Data disimpan secara lokal di browser.
       </footer>
     </div>
   </div>
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyxiO-x7jq7we_hDDHfjDcoxHijicIGNgiTIxNwsALYfPSwU9V3OSHIpaJ62zfhLGvB/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwqY3E8sUH5iaG-CPA0AgHNdNMmhy2UmoW97BKp2WOOSQNXu5y7kafZPVEaYQ4-xaWC/exec";
 
     let globalMaterials = [];
     let globalUnits = [];
@@ -275,8 +275,7 @@
       document.getElementById(id).textContent = value == null ? "" : String(value);
     }
 
-   async function loadMaterials() {
-      const jenis = document.getElementById("jenisPengajuan").value;
+    async function loadMaterials() {
       const loader = document.getElementById("materialLoading");
       const select = document.getElementById("dropdownMaterial");
 
@@ -296,38 +295,6 @@
         select.appendChild(defaultOption);
 
         // Cukup satu kali perulangan yang lengkap dengan vendor dan harga
-        list.forEach(item => {
-          const kode = String(item.kode ?? "");
-          const deskripsi = String(item.deskripsi ?? "");
-          const harga = Number(item.harga) || 0;
-          const vendor = String(item.vendor ?? "-"); 
-          const option = document.createElement("option");
-
-          option.value = kode;
-          option.textContent = `${kode} - ${deskripsi} [Vendor: ${vendor}] (Rp ${harga.toLocaleString("id-ID")})`;
-          select.appendChild(option);
-        });
-
-        loader.style.display = "none";
-        select.style.display = "block";
-     // Tentukan endpoint aksi berdasarkan pilihan
-      const actionName = (jenis === "bhp") ? "getMaterialBhp" : "getMaterial";
-
-      try {
-        const list = await fetchJson(WEB_APP_URL + "?action=" + actionName);
-
-        if (!Array.isArray(list)) {
-          throw new Error("Format data material tidak valid.");
-        }
-
-        globalMaterials = list;
-        select.replaceChildren();
-
-        const defaultOption = document.createElement("option");
-        defaultOption.value = "";
-        defaultOption.textContent = "-- Pilih Kode & Deskripsi --";
-        select.appendChild(defaultOption);
-
         list.forEach(item => {
           const kode = String(item.kode ?? "");
           const deskripsi = String(item.deskripsi ?? "");
@@ -384,58 +351,31 @@
       }
     }
 
-    function gantiJenisPengajuan() {
-      // Reset input terkait saat jenis diganti
-      document.getElementById("dropdownMaterial").value = "";
-      updateMaterialMeta();
-      loadMaterials();
-    }
-     
     function updateMaterialMeta() {
       const value = document.getElementById("dropdownMaterial").value;
       const item = globalMaterials.find(material => String(material.kode) === String(value));
-      const imgContainer = document.getElementById("previewGambarContainer");
-      const imgElement = document.getElementById("previewGambar");
 
       if (!item) {
-        ["vendorTarget", "deskripsiBarang", "satuanBarang", "merkBarang", "hargaBarang"].forEach(id => {
-          const el = document.getElementById(id);
-          if(el) el.value = "";
-        });
+        ["vendorTarget", "deskripsiBarang", "satuanBarang", "merkBarang", "hargaBarang"]
+          .forEach(id => document.getElementById(id).value = "");
+
         setText("vendorBadge", "");
-        if(imgContainer) imgContainer.style.display = "none";
-        if(imgElement) imgElement.src = "";
         return;
       }
 
       const harga = Number(item.harga) || 0;
 
-      // Masukkan ke form tersembunyi/input aktif Anda
-      if(document.getElementById("vendorTarget")) document.getElementById("vendorTarget").value = item.vendor ?? "";
-      if(document.getElementById("deskripsiBarang")) document.getElementById("deskripsiBarang").value = item.deskripsi ?? "";
-      if(document.getElementById("satuanBarang")) document.getElementById("satuanBarang").value = item.satuan ?? "";
-      if(document.getElementById("merkBarang")) document.getElementById("merkBarang").value = item.merk ?? "";
-      if(document.getElementById("hargaBarang")) document.getElementById("hargaBarang").value = harga;
+      document.getElementById("vendorTarget").value = item.vendor ?? "";
+      document.getElementById("deskripsiBarang").value = item.deskripsi ?? "";
+      document.getElementById("satuanBarang").value = item.satuan ?? "";
+      document.getElementById("merkBarang").value = item.merk ?? "";
+      document.getElementById("hargaBarang").value = harga;
 
       setText(
         "vendorBadge",
         `🏢 Vendor: ${item.vendor ?? "-"} | 💰 Harga: Rp ${harga.toLocaleString("id-ID")}`
       );
-
-      // Tampilkan gambar produk jika link gambar (Kolom I) tersedia
-      if (imgContainer && imgElement) {
-        if (item.gambar && item.gambar.startsWith("http")) {
-          imgElement.src = item.gambar;
-          imgContainer.style.display = "block";
-        } else {
-          imgContainer.style.display = "none";
-          imgElement.src = "";
-        }
-      }
     }
-     window.addEventListener("DOMContentLoaded", () => {
-      loadMaterials();
-    });
 
     function updateUnitMeta() {
       const value = document.getElementById("dropdownUnit").value;
