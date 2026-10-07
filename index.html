@@ -393,31 +393,58 @@
       }
     }
 
+    function gantiJenisPengajuan() {
+      // Reset input terkait saat jenis diganti
+      document.getElementById("dropdownMaterial").value = "";
+      updateMaterialMeta();
+      loadMaterials();
+    }
+     
     function updateMaterialMeta() {
       const value = document.getElementById("dropdownMaterial").value;
       const item = globalMaterials.find(material => String(material.kode) === String(value));
+      const imgContainer = document.getElementById("previewGambarContainer");
+      const imgElement = document.getElementById("previewGambar");
 
       if (!item) {
-        ["vendorTarget", "deskripsiBarang", "satuanBarang", "merkBarang", "hargaBarang"]
-          .forEach(id => document.getElementById(id).value = "");
-
+        ["vendorTarget", "deskripsiBarang", "satuanBarang", "merkBarang", "hargaBarang"].forEach(id => {
+          const el = document.getElementById(id);
+          if(el) el.value = "";
+        });
         setText("vendorBadge", "");
+        if(imgContainer) imgContainer.style.display = "none";
+        if(imgElement) imgElement.src = "";
         return;
       }
 
       const harga = Number(item.harga) || 0;
 
-      document.getElementById("vendorTarget").value = item.vendor ?? "";
-      document.getElementById("deskripsiBarang").value = item.deskripsi ?? "";
-      document.getElementById("satuanBarang").value = item.satuan ?? "";
-      document.getElementById("merkBarang").value = item.merk ?? "";
-      document.getElementById("hargaBarang").value = harga;
+      // Masukkan ke form tersembunyi/input aktif Anda
+      if(document.getElementById("vendorTarget")) document.getElementById("vendorTarget").value = item.vendor ?? "";
+      if(document.getElementById("deskripsiBarang")) document.getElementById("deskripsiBarang").value = item.deskripsi ?? "";
+      if(document.getElementById("satuanBarang")) document.getElementById("satuanBarang").value = item.satuan ?? "";
+      if(document.getElementById("merkBarang")) document.getElementById("merkBarang").value = item.merk ?? "";
+      if(document.getElementById("hargaBarang")) document.getElementById("hargaBarang").value = harga;
 
       setText(
         "vendorBadge",
         `🏢 Vendor: ${item.vendor ?? "-"} | 💰 Harga: Rp ${harga.toLocaleString("id-ID")}`
       );
+
+      // Tampilkan gambar produk jika link gambar (Kolom I) tersedia
+      if (imgContainer && imgElement) {
+        if (item.gambar && item.gambar.startsWith("http")) {
+          imgElement.src = item.gambar;
+          imgContainer.style.display = "block";
+        } else {
+          imgContainer.style.display = "none";
+          imgElement.src = "";
+        }
+      }
     }
+     window.addEventListener("DOMContentLoaded", () => {
+      loadMaterials();
+    });
 
     function updateUnitMeta() {
       const value = document.getElementById("dropdownUnit").value;
