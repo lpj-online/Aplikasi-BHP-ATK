@@ -1,5 +1,5 @@
 {
-  "name": "E-Form Permintaan ATK & BHP",
+  "name": "E-Form ATK Triwulan",
   "short_name": "ATK Maranatha",
   "start_url": "./index.html",
   "display": "standalone",
@@ -7,7 +7,7 @@
   "theme_color": "#0056b3",
   "icons": [
     {
-     "src": "https://lh3.googleusercontent.com/d/13YmXc7ritCneXuycthkhfMb7fGzN3rzz",
+     "src": "https://lh3.googleusercontent.com/d/1DaUw0N2UaD4MwI7BqWfZDutMwrmctoH7",
       "sizes": "192x192",
       "type": "image/png"
     }
