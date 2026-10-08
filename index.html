@@ -331,8 +331,21 @@ async function loadMaterials() {
       }
     }
 
-    function gantiJenisPengajuan() {
-      document.getElementById("dropdownMaterial").value = "";
+   function gantiJenisPengajuan() {
+      const jenis = document.getElementById("jenisPengajuan").value;
+      const subContainer = document.getElementById("subKategoriContainer");
+
+      // Tampilkan sub-kategori BHP jika memilih "bhp", sembunyikan jika "atk"
+      if (jenis === "bhp") {
+        subContainer.style.display = "block"; 
+      } else {
+        subContainer.style.display = "none";  
+      }
+
+      if (window.choicesMaterial) {
+        window.choicesMaterial.setChoiceByValue("");
+      }
+      
       updateMaterialMeta();
       loadMaterials();
     }
