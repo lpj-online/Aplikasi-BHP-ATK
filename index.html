@@ -173,7 +173,18 @@ Memuat daftar unit kerja...
               <option value="bhp">BHP (Bahan / Barang Habis Pakai)</option>
             </select>
           </div>
-  
+          
+  <!-- Sub-Kategori BHP (Sesuai nama sheet di Spreadsheet) -->
+          <div class="mb-3" id="subKategoriContainer" style="display:none;">
+            <label class="form-label mb-2">🦷 Pilih Kategori / Bagian BHP</label>
+            <select id="kategoriBhp" class="form-select shadow-sm" onchange="loadMaterials()">
+              <option value="SL PERIO">SL PERIO</option>
+              <option value="SL OB">SL OB</option>
+              <option value="SL IKGA">SL IKGA (GIGI ENDO)</option>
+              <!-- Tambahkan sheet kategori lainnya di sini sesuai nama sheet Anda -->
+            </select>
+          </div>
+          
 <div class="inner-card mb-4">
 <h6 class="fw-bold text-dark mb-3">
 <span class="badge bg-primary me-2">Step 2</span>
