@@ -285,7 +285,7 @@ Memuat database material barang...
       const select = document.getElementById("dropdownMaterial");
 
       try {
-        const list = await fetchJson(WEB_APP_URL + "?action=getMaterialBhp");
+       const list = await fetchJson(WEB_APP_URL + "?action=getMaterial");
 
         if (!Array.isArray(list)) {
           throw new Error("Format data material tidak valid.");
