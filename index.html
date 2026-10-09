@@ -163,19 +163,24 @@
         <form id="atkForm">
           <div class="mb-4">
             <label class="form-label mb-2">🏢 Nama Unit Kerja / Direktorat Anda</label>
-
             <div id="unitLoading" class="loading-overlay mb-2">
               <div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
               Memuat daftar unit kerja...
             </div>
-
             <select id="dropdownUnit" class="form-select shadow-sm" style="display:none" required>
               <option value="">-- Pilih Unit Kerja Anda --</option>
             </select>
-
             <input type="hidden" id="lokasiUnit">
           </div>
 
+          <div class="mb-3">
+            <label class="form-label">📂 Jenis Pengajuan</label>
+            id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
+              <option value="atk">ATK (Alat Tulis Kantor)</option>
+              <option value="bhp">BHP (Bahan / Barang Habis Pakai Kedokteran Gigi)</option>
+            </select>
+          </div>
+          
           <div class="inner-card mb-4">
             <h6 class="fw-bold text-dark mb-3">
               <span class="badge bg-primary me-2">Step 2</span>
