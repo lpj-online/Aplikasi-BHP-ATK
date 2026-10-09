@@ -330,46 +330,66 @@ async function loadMaterials() {
     }
 
     function gantiJenisPengajuan() {
-      document.getElementById("dropdownMaterial").value = "";
+      const jenis = document.getElementById("jenisPengajuan").value;
+      const subContainer = document.getElementById("subKategoriContainer");
+
+      if (jenis === "bhp") {
+        subContainer.style.display = "block"; // Tampilkan pilihan kategori BHP
+      } else {
+        subContainer.style.display = "none";  // Sembunyikan jika ATK
+      }
+
+      if (choicesMaterial) {
+        choicesMaterial.setChoiceByValue("");
+      }
       updateMaterialMeta();
       loadMaterials();
     }
+
+    async function loadMaterials() {
+      const jenis = document.getElementById("jenisPengajuan").value;
+      const loader = document.getElementById("materialLoading");
+
+      loader.style.display = "block";
+
+      // Tentukan nama sheet yang akan dipanggil ke backend
+      let sheetName = "material"; // Default ATK
+      if (jenis === "bhp") {
+        const kategoriSelect = document.getElementById("kategoriBhp");
+        sheetName = kategoriSelect ? kategoriSelect.value : "DENRAD";
+      }
+
+      try {
+        // Kirim parameter action dan nama sheet yang dituju
+        const list = await fetchJson(WEB_APP_URL + "?action=getMaterial&sheet=" + encodeURIComponent(sheetName));
+
+        if (!Array.isArray(list)) {
+          throw new Error("Format data material tidak valid.");
+        }
+
+        globalMaterials = list;
+
+        const choicesData = list.map(item => {
+          const kode = String(item.kode ?? "");
+          const deskripsi = String(item.deskripsi ?? "");
+          const harga = Number(item.harga) || 0;
+          const vendor = String(item.vendor ?? "-"); 
           
-async function loadUnits() {
-const loader = document.getElementById("unitLoading");
-const select = document.getElementById("dropdownUnit");
+          return {
+            value: kode,
+            label: `${kode} - ${deskripsi} [Vendor: ${vendor}] (Rp ${harga.toLocaleString("id-ID")})`
+          };
+        });
 
-try {
-const list = await fetchJson(WEB_APP_URL + "?action=getUnit");
+        choicesMaterial.clearChoices();
+        choicesMaterial.setChoices(choicesData, 'value', 'label', true);
 
-if (!Array.isArray(list)) {
-throw new Error("Format data unit tidak valid.");
-}
-
-globalUnits = list;
-select.replaceChildren();
-
-const defaultOption = document.createElement("option");
-defaultOption.value = "";
-defaultOption.textContent = "-- Pilih Unit Kerja Anda --";
-select.appendChild(defaultOption);
-
-list.forEach(item => {
-const namaUnit = String(item.namaUnit ?? "");
-const option = document.createElement("option");
-
-option.value = namaUnit;
-option.textContent = namaUnit;
-select.appendChild(option);
-});
-
-loader.style.display = "none";
-select.style.display = "block";
-} catch (error) {
-loader.textContent = "❌ Gagal memuat unit.";
-console.error(error);
-}
-}
+        loader.style.display = "none";
+      } catch (error) {
+        loader.textContent = "❌ Gagal memuat material.";
+        console.error(error);
+      }
+    }
 
 function updateMaterialMeta() {
 const value = document.getElementById("dropdownMaterial").value;
