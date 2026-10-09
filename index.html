@@ -166,26 +166,14 @@ Memuat daftar unit kerja...
 </div>
 
 <!-- Pilihan Jenis Pengajuan (ATK atau BHP) -->
-          <div class="mb-3">
-            <label class="form-label mb-2">📂 Pilih Jenis Pengajuan</label>
-            <select id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
-              <option value="atk">ATK (Alat Tulis Kantor)</option>
-              <option value="bhp">BHP (Bahan / Barang Habis Pakai)</option>
-            </select>
-          </div>
-          
-  <!-- Sub-Kategori BHP (Sesuai nama sheet di Spreadsheet) -->
-          <div class="mb-3" id="subKategoriContainer" style="display:none;">
-            <label class="form-label mb-2">🦷 Pilih Kategori / Bagian BHP</label>
-            <select id="kategoriBhp" class="form-select shadow-sm" onchange="loadMaterials()">
-              <option value="SL PERIO">SL PERIO</option>
-              <option value="SL OB">SL OB</option>
-              <option value="SL IKGA">SL IKGA (GIGI ENDO)</option>
-                      
-              <!-- Tambahkan sheet kategori lainnya di sini sesuai nama sheet Anda -->
-            </select>
-          </div>
-          
+<div class="mb-3">
+<label class="form-label mb-2">📂 Pilih Jenis Pengajuan</label>
+<select id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
+<option value="atk">ATK (Alat Tulis Kantor)</option>
+<option value="bhp">BHP (Bahan / Barang Habis Pakai)</option>
+</select>
+</div>
+
 <div class="inner-card mb-4">
 <h6 class="fw-bold text-dark mb-3">
 <span class="badge bg-primary me-2">Step 2</span>
@@ -255,7 +243,7 @@ Memuat database material barang...
 </div>
 </div>
 <script>
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyN14F3aO4aFLv6pXskHpFYh_Md4Erua4N73XOLHBJMl1EK3wGHhUyyMx-n3TkX8tmL/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxkxgkT3gkQyyt5WHJ7JSxq36wUBEnHUvCthxOnmXcuYZcKsYwkHDy6woCoOHiiIybJ/exec";
 
 let globalMaterials = [];
 let globalUnits = [];
@@ -286,70 +274,58 @@ document.getElementById(id).textContent = value == null ? "" : String(value);
 }
 
 async function loadMaterials() {
-      const jenis = document.getElementById("jenisPengajuan").value;
-      const loader = document.getElementById("materialLoading");
+const jenisEl = document.getElementById("jenisPengajuan");
+const jenis = jenisEl ? jenisEl.value : "atk";
+const loader = document.getElementById("materialLoading");
+const select = document.getElementById("dropdownMaterial");
 
-      if (loader) loader.style.display = "block";
+loader.style.display = "block";
+select.style.display = "none";
 
-      // Tentukan sheet mana yang dipanggil berdasarkan jenis pengajuan
-      let sheetName = "material"; // Default untuk ATK
-      if (jenis === "bhp") {
-        const kategoriSelect = document.getElementById("kategoriBhp");
-        sheetName = kategoriSelect ? kategoriSelect.value : "SL PERIO";
-      }
+// Pilih action backend sesuai pilihan dropdown
+const actionName = (jenis === "bhp") ? "getMaterialBhp" : "getMaterial";
 
-      try {
-        const list = await fetchJson(WEB_APP_URL + "?action=getMaterial&sheet=" + encodeURIComponent(sheetName));
+try {
+const list = await fetchJson(WEB_APP_URL + "?action=" + actionName);
 
-        if (!Array.isArray(list)) {
-          throw new Error("Format data material tidak valid.");
-        }
+if (!Array.isArray(list)) {
+throw new Error("Format data material tidak valid.");
+}
 
-        globalMaterials = list;
+globalMaterials = list;
+select.replaceChildren();
 
-        const choicesData = list.map(item => {
-          const kode = String(item.kode ?? "");
-          const deskripsi = String(item.deskripsi ?? "");
-          const harga = Number(item.harga) || 0;
-          const vendor = String(item.vendor ?? "-"); 
-          
-          return {
-            value: kode,
-            label: `${kode} - ${deskripsi} [${vendor}] (Rp ${harga.toLocaleString("id-ID")})`
-          };
-        });
+const defaultOption = document.createElement("option");
+defaultOption.value = "";
+defaultOption.textContent = "-- Pilih Kode & Deskripsi --";
+select.appendChild(defaultOption);
 
-        if (window.choicesMaterial) {
-          window.choicesMaterial.clearChoices();
-          window.choicesMaterial.setChoices(choicesData, 'value', 'label', true);
-        }
+list.forEach(item => {
+const kode = String(item.kode ?? "");
+const deskripsi = String(item.deskripsi ?? "");
+const harga = Number(item.harga) || 0;
+const vendor = String(item.vendor ?? "-");
+const option = document.createElement("option");
 
-        if (loader) loader.style.display = "none";
-      } catch (error) {
-        if (loader) loader.textContent = "❌ Gagal memuat material.";
-        console.error(error);
-      }
-    }
-          
-   function gantiJenisPengajuan() {
-      const jenis = document.getElementById("jenisPengajuan").value;
-      const subContainer = document.getElementById("subKategoriContainer");
+option.value = kode;
+option.textContent = `${kode} - ${deskripsi} [Vendor: ${vendor}] (Rp ${harga.toLocaleString("id-ID")})`;
+select.appendChild(option);
+});
 
-      // Tampilkan sub-kategori BHP jika memilih "bhp", sembunyikan jika "atk"
-      if (jenis === "bhp") {
-        subContainer.style.display = "block"; 
-      } else {
-        subContainer.style.display = "none";  
-      }
+loader.style.display = "none";
+select.style.display = "block";
+} catch (error) {
+loader.textContent = "❌ Gagal memuat material.";
+console.error(error);
+}
+}
 
-      if (window.choicesMaterial) {
-        window.choicesMaterial.setChoiceByValue("");
-      }
-      
-      updateMaterialMeta();
-      loadMaterials();
-    }
-          
+function gantiJenisPengajuan() {
+document.getElementById("dropdownMaterial").value = "";
+updateMaterialMeta();
+loadMaterials();
+}
+
 async function loadUnits() {
 const loader = document.getElementById("unitLoading");
 const select = document.getElementById("dropdownUnit");
@@ -407,7 +383,7 @@ document.getElementById("merkBarang").value = item.merk ?? "";
 document.getElementById("hargaBarang").value = harga;
 
 setText(
-"vendorBadge",
+vendorBadge,
 `🏢 Vendor: ${item.vendor ?? "-"} | 💰 Harga: Rp ${harga.toLocaleString("id-ID")}`
 );
 }
@@ -768,17 +744,17 @@ groupedByVendor[vendor] = [
 ["PENGAJUAN PENGGUNAAN DANA BHP"],
 [],
 [
-"NO",
-"KODE MATERIAL",
-"SATUAN PAKAI",
-"MERK",
-"KETERANGAN",
-"HARGA",
-"VENDOR",
-"JUMLAH",
-"JUMLAH HARGA",
-"NAMA UNIT",
-"LOKASI PENGIRIMAN BARANG"
+NO,
+KODE MATERIAL,
+SATUAN PAKAI,
+MERK,
+KETERANGAN,
+HARGA,
+VENDOR,
+JUMLAH,
+JUMLAH HARGA,
+NAMA UNIT,
+LOKASI PENGIRIMAN BARANG
 ]
 ];
 }
@@ -790,7 +766,7 @@ const rowNumber = groupedByVendor[vendor].length - 2;
 
 groupedByVendor[vendor].push([
 rowNumber,
-"'" + String(item.kodeMaterial || ""),
+ + String(item.kodeMaterial || ""),
 item.satuanBarang || "",
 item.merkBarang || "",
 item.deskripsiBarang || "",
@@ -869,15 +845,3 @@ button.textContent = "📥 Unduh Berkas Excel Multi-Tab (.xlsx)";
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
