@@ -160,70 +160,65 @@
       </div>
 
       <div class="form-section">
-        <form id="atkForm">
-          <div class="mb-4">
-            <label class="form-label mb-2">🏢 Nama Unit Kerja / Direktorat Anda</label>
-            <div id="unitLoading" class="loading-overlay mb-2">
-              <div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
-              Memuat daftar unit kerja...
-            </div>
-            <select id="dropdownUnit" class="form-select shadow-sm" style="display:none" required>
-              <option value="">-- Pilih Unit Kerja Anda --</option>
-            </select>
-            <input type="hidden" id="lokasiUnit">
-          </div>
+<form id="bhpForm">
+<div class="mb-4">
+<label class="form-label mb-2">🏢 Nama Unit Kerja / Direktorat Anda</label>
+<div id="unitLoading" class="loading-overlay mb-2">
+<div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
+Memuat daftar unit kerja...
+</div>
+<select id="dropdownUnit" class="form-select shadow-sm" style="display:none" required>
+<option value="">-- Pilih Unit Kerja Anda --</option>
+</select>
+<input type="hidden" id="lokasiUnit">
+</div>
 
-          <div class="mb-3">
-            <label class="form-label small mb-1">📦 Pilih Barang / Material</label>
-              <select id="dropdownMaterial" class="form-select shadow-sm" style="display:none">
-                <option value="">-- Pilih Kode & Deskripsi --</option>
-              </select>
+<!-- Pilihan Jenis Pengajuan (ATK atau BHP) -->
+<div class="mb-3">
+<label class="form-label mb-2">📂 Pilih Jenis Pengajuan</label>
+<select id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
+<option value="atk">ATK (Alat Tulis Kantor)</option>
+<option value="bhp">BHP (Bahan / Barang Habis Pakai)</option>
+</select>
+</div>
 
-            <!-- Area Pratinjau Gambar Barang -->
-            <div id="previewGambarContainer" class="mt-2 text-center" style="display:none;">
-              <img id="previewGambar" src="" alt="Preview Barang" class="img-thumbnail rounded shadow-sm" style="max-height: 120px; object-fit: contain;">
-                </div>
-                  <div id="vendorBadge" class="form-text text-primary fw-bold mt-2" style="font-size:.85rem"></div>
-                      </div>
-          
-          <div class="inner-card mb-4">
-            <h6 class="fw-bold text-dark mb-3">
-              <span class="badge bg-primary me-2">Step 2</span>
-              Tambah Item Barang ke Keranjang
-            </h6>
+<div class="inner-card mb-4">
+<h6 class="fw-bold text-dark mb-3">
+<span class="badge bg-primary me-2">Step 2</span>
+Tambah Item Barang ke Keranjang
+</h6>
 
-            <input type="hidden" id="vendorTarget">
-            <input type="hidden" id="deskripsiBarang">
-            <input type="hidden" id="satuanBarang">
-            <input type="hidden" id="merkBarang">
-            <input type="hidden" id="hargaBarang">
+<input type="hidden" id="vendorTarget">
+<input type="hidden" id="deskripsiBarang">
+<input type="hidden" id="satuanBarang">
+<input type="hidden" id="merkBarang">
+<input type="hidden" id="hargaBarang">
 
-            <div class="mb-3">
-              <label class="form-label small mb-1">📦 Pilih Barang / Material</label>
+<div class="mb-3">
+<label class="form-label small mb-1">📦 Pilih Barang / Material ATK/BHP</label>
 
-              <div id="materialLoading" class="loading-overlay mb-2">
-                <div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
-                Memuat database material barang...
-              </div>
+<div id="materialLoading" class="loading-overlay mb-2">
+<div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
+Memuat database material barang...
+</div>
 
-              <select id="dropdownMaterial" class="form-select shadow-sm" style="display:none">
-                <option value="">-- Pilih Kode & Deskripsi --</option>
-              </select>
+<select id="dropdownMaterial" class="form-select shadow-sm" style="display:none">
+<option value="">-- Pilih Kode & Deskripsi --</option>
+</select>
 
-              <div id="vendorBadge" class="form-text text-primary fw-bold mt-2" style="font-size:.85rem"></div>
-            </div>
+<div id="vendorBadge" class="form-text text-primary fw-bold mt-2" style="font-size:.85rem"></div>
+</div>
 
-            <div class="mb-3">
-              <label class="form-label small mb-1">🔢 Jumlah Permintaan</label>
-              <input type="number" id="jumlah" class="form-control shadow-sm" min="1" step="1" placeholder="Masukkan jumlah angka">
-            </div>
+<div class="mb-3">
+<label class="form-label small mb-1">🔢 Jumlah Permintaan</label>
+<input type="number" id="jumlah" class="form-control shadow-sm" min="1" step="1" placeholder="Masukkan jumlah angka">
+</div>
 
-            <button type="button" id="btnAdd" class="btn btn-add w-100 fw-bold shadow-sm mt-2">
-              ➕ Masukkan ke Keranjang
-            </button>
-          </div>
-        </form>
-
+<button type="button" id="btnAdd" class="btn btn-add w-100 fw-bold shadow-sm mt-2">
+➕ Masukkan ke Keranjang
+</button>
+</div>
+</form>
         <div id="tabelKeranjangArea" class="card p-3 border-0 bg-light" style="display:none;border-radius:15px">
           <h6 class="fw-bold text-dark mb-3">🛒 Daftar Keranjang Pengajuan Anda:</h6>
 
