@@ -173,6 +173,15 @@ Memuat daftar unit kerja...
               <option value="bhp">BHP (Bahan / Barang Habis Pakai Kedokteran Gigi)</option>
             </select>
           </div>
+          <div class="mb-3" id="subKategoriContainer" style="display:none;">
+            <label class="form-label mb-2">🦷 Pilih Kategori / Bagian BHP</label>
+            <select id="kategoriBhp" class="form-select shadow-sm" onchange="loadMaterials()">
+              <option value="DENRAD">DENRAD (Dental Radiologi)</option>
+              <option value="IKD">IKD (Ilmu Konservasi Gigi)</option>
+              <option value="ORTO">ORTO (Ortodonsia)</option>
+              <!-- Tambahkan kategori lain di sini jika ada -->
+            </select>
+          </div>
   
 <div class="inner-card mb-4">
 <h6 class="fw-bold text-dark mb-3">
