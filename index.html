@@ -166,23 +166,14 @@ Memuat daftar unit kerja...
 </div>
 
 <!-- Pilihan Jenis Pengajuan (ATK atau BHP) -->
-          <div class="mb-3">
-            <label class="form-label mb-2">📂 Pilih Jenis Pengajuan</label>
-            <select id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
-              <option value="atk">ATK (Alat Tulis Kantor)</option>
-              <option value="bhp">BHP (Bahan / Barang Habis Pakai Kedokteran Gigi)</option>
-            </select>
-          </div>
-          <div class="mb-3" id="subKategoriContainer" style="display:none;">
-            <label class="form-label mb-2">🦷 Pilih Kategori / Bagian BHP</label>
-            <select id="kategoriBhp" class="form-select shadow-sm" onchange="loadMaterials()">
-              <option value="DENRAD">DENRAD (Dental Radiologi)</option>
-              <option value="IKD">IKD (Ilmu Konservasi Gigi)</option>
-              <option value="ORTO">ORTO (Ortodonsia)</option>
-              <!-- Tambahkan kategori lain di sini jika ada -->
-            </select>
-          </div>
-  
+<div class="mb-3">
+<label class="form-label mb-2">📂 Pilih Jenis Pengajuan</label>
+<select id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
+<option value="atk">ATK (Alat Tulis Kantor)</option>
+<option value="bhp">BHP (Bahan / Barang Habis Pakai Kedokteran Gigi)</option>
+</select>
+</div>
+
 <div class="inner-card mb-4">
 <h6 class="fw-bold text-dark mb-3">
 <span class="badge bg-primary me-2">Step 2</span>
@@ -283,113 +274,93 @@ document.getElementById(id).textContent = value == null ? "" : String(value);
 }
 
 async function loadMaterials() {
-      const jenisEl = document.getElementById("jenisPengajuan");
-      const jenis = jenisEl ? jenisEl.value : "atk";
-      const loader = document.getElementById("materialLoading");
-      const select = document.getElementById("dropdownMaterial");
+const jenisEl = document.getElementById("jenisPengajuan");
+const jenis = jenisEl ? jenisEl.value : "atk";
+const loader = document.getElementById("materialLoading");
+const select = document.getElementById("dropdownMaterial");
 
-      loader.style.display = "block";
-      select.style.display = "none";
+loader.style.display = "block";
+select.style.display = "none";
 
-      // Pilih action backend sesuai pilihan dropdown
-      const actionName = (jenis === "bhp") ? "getMaterialBhp" : "getMaterial";
+// Pilih action backend sesuai pilihan dropdown
+const actionName = (jenis === "bhp") ? "getMaterialBhp" : "getMaterial";
 
-      try {
-        const list = await fetchJson(WEB_APP_URL + "?action=" + actionName);
+try {
+const list = await fetchJson(WEB_APP_URL + "?action=" + actionName);
 
-        if (!Array.isArray(list)) {
-          throw new Error("Format data material tidak valid.");
-        }
+if (!Array.isArray(list)) {
+throw new Error("Format data material tidak valid.");
+}
 
-        globalMaterials = list;
-        select.replaceChildren();
+globalMaterials = list;
+select.replaceChildren();
 
-        const defaultOption = document.createElement("option");
-        defaultOption.value = "";
-        defaultOption.textContent = "-- Pilih Kode & Deskripsi --";
-        select.appendChild(defaultOption);
+const defaultOption = document.createElement("option");
+defaultOption.value = "";
+defaultOption.textContent = "-- Pilih Kode & Deskripsi --";
+select.appendChild(defaultOption);
 
-        list.forEach(item => {
-          const kode = String(item.kode ?? "");
-          const deskripsi = String(item.deskripsi ?? "");
-          const harga = Number(item.harga) || 0;
-          const vendor = String(item.vendor ?? "-"); 
-          const option = document.createElement("option");
+list.forEach(item => {
+const kode = String(item.kode ?? "");
+const deskripsi = String(item.deskripsi ?? "");
+const harga = Number(item.harga) || 0;
+const vendor = String(item.vendor ?? "-");
+const option = document.createElement("option");
 
-          option.value = kode;
-          option.textContent = `${kode} - ${deskripsi} [Vendor: ${vendor}] (Rp ${harga.toLocaleString("id-ID")})`;
-          select.appendChild(option);
-        });
+option.value = kode;
+option.textContent = `${kode} - ${deskripsi} [Vendor: ${vendor}] (Rp ${harga.toLocaleString("id-ID")})`;
+select.appendChild(option);
+});
 
-        loader.style.display = "none";
-        select.style.display = "block";
-      } catch (error) {
-        loader.textContent = "❌ Gagal memuat material.";
-        console.error(error);
-      }
-    }
+loader.style.display = "none";
+select.style.display = "block";
+} catch (error) {
+loader.textContent = "❌ Gagal memuat material.";
+console.error(error);
+}
+}
 
-    function gantiJenisPengajuan() {
-      const jenis = document.getElementById("jenisPengajuan").value;
-      const subContainer = document.getElementById("subKategoriContainer");
+function gantiJenisPengajuan() {
+document.getElementById("dropdownMaterial").value = "";
+updateMaterialMeta();
+loadMaterials();
+}
 
-      if (jenis === "bhp") {
-        subContainer.style.display = "block"; // Tampilkan pilihan kategori BHP
-      } else {
-        subContainer.style.display = "none";  // Sembunyikan jika ATK
-      }
+async function loadUnits() {
+const loader = document.getElementById("unitLoading");
+const select = document.getElementById("dropdownUnit");
 
-      if (choicesMaterial) {
-        choicesMaterial.setChoiceByValue("");
-      }
-      updateMaterialMeta();
-      loadMaterials();
-    }
+try {
+const list = await fetchJson(WEB_APP_URL + "?action=getUnit");
 
-    async function loadMaterials() {
-      const jenis = document.getElementById("jenisPengajuan").value;
-      const loader = document.getElementById("materialLoading");
+if (!Array.isArray(list)) {
+throw new Error("Format data unit tidak valid.");
+}
 
-      loader.style.display = "block";
+globalUnits = list;
+select.replaceChildren();
 
-      // Tentukan nama sheet yang akan dipanggil ke backend
-      let sheetName = "material"; // Default ATK
-      if (jenis === "bhp") {
-        const kategoriSelect = document.getElementById("kategoriBhp");
-        sheetName = kategoriSelect ? kategoriSelect.value : "DENRAD";
-      }
+const defaultOption = document.createElement("option");
+defaultOption.value = "";
+defaultOption.textContent = "-- Pilih Unit Kerja Anda --";
+select.appendChild(defaultOption);
 
-      try {
-        // Kirim parameter action dan nama sheet yang dituju
-        const list = await fetchJson(WEB_APP_URL + "?action=getMaterial&sheet=" + encodeURIComponent(sheetName));
+list.forEach(item => {
+const namaUnit = String(item.namaUnit ?? "");
+const option = document.createElement("option");
 
-        if (!Array.isArray(list)) {
-          throw new Error("Format data material tidak valid.");
-        }
+option.value = namaUnit;
+option.textContent = namaUnit;
+select.appendChild(option);
+});
 
-        globalMaterials = list;
-
-        const choicesData = list.map(item => {
-          const kode = String(item.kode ?? "");
-          const deskripsi = String(item.deskripsi ?? "");
-          const harga = Number(item.harga) || 0;
-          const vendor = String(item.vendor ?? "-"); 
-          
-          return {
-            value: kode,
-            label: `${kode} - ${deskripsi} [Vendor: ${vendor}] (Rp ${harga.toLocaleString("id-ID")})`
-          };
-        });
-
-        choicesMaterial.clearChoices();
-        choicesMaterial.setChoices(choicesData, 'value', 'label', true);
-
-        loader.style.display = "none";
-      } catch (error) {
-        loader.textContent = "❌ Gagal memuat material.";
-        console.error(error);
-      }
-    }
+loader.style.display = "none";
+select.style.display = "block";
+} catch (error) {
+loader.textContent = "❌ Gagal memuat unit.";
+console.error(error);
+}
+}
 
 function updateMaterialMeta() {
 const value = document.getElementById("dropdownMaterial").value;
@@ -412,7 +383,7 @@ document.getElementById("merkBarang").value = item.merk ?? "";
 document.getElementById("hargaBarang").value = harga;
 
 setText(
-"vendorBadge",
+vendorBadge,
 `🏢 Vendor: ${item.vendor ?? "-"} | 💰 Harga: Rp ${harga.toLocaleString("id-ID")}`
 );
 }
@@ -773,17 +744,17 @@ groupedByVendor[vendor] = [
 ["PENGAJUAN PENGGUNAAN DANA BHP"],
 [],
 [
-"NO",
-"KODE MATERIAL",
-"SATUAN PAKAI",
-"MERK",
-"KETERANGAN",
-"HARGA",
-"VENDOR",
-"JUMLAH",
-"JUMLAH HARGA",
-"NAMA UNIT",
-"LOKASI PENGIRIMAN BARANG"
+NO,
+KODE MATERIAL,
+SATUAN PAKAI,
+MERK,
+KETERANGAN,
+HARGA,
+VENDOR,
+JUMLAH,
+JUMLAH HARGA,
+NAMA UNIT,
+LOKASI PENGIRIMAN BARANG
 ]
 ];
 }
@@ -795,7 +766,7 @@ const rowNumber = groupedByVendor[vendor].length - 2;
 
 groupedByVendor[vendor].push([
 rowNumber,
-"'" + String(item.kodeMaterial || ""),
+ + String(item.kodeMaterial || ""),
 item.satuanBarang || "",
 item.merkBarang || "",
 item.deskripsiBarang || "",
