@@ -160,65 +160,60 @@
       </div>
 
       <div class="form-section">
-<form id="bhpForm">
-<div class="mb-4">
-<label class="form-label mb-2">🏢 Nama Unit Kerja / Direktorat Anda</label>
-<div id="unitLoading" class="loading-overlay mb-2">
-<div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
-Memuat daftar unit kerja...
-</div>
-<select id="dropdownUnit" class="form-select shadow-sm" style="display:none" required>
-<option value="">-- Pilih Unit Kerja Anda --</option>
-</select>
-<input type="hidden" id="lokasiUnit">
-</div>
+        <form id="atkForm">
+          <div class="mb-4">
+            <label class="form-label mb-2">🏢 Nama Unit Kerja / Direktorat Anda</label>
 
-<!-- Pilihan Jenis Pengajuan (ATK atau BHP) -->
-<div class="mb-3">
-<label class="form-label mb-2">📂 Pilih Jenis Pengajuan</label>
-<select id="jenisPengajuan" class="form-select shadow-sm" onchange="gantiJenisPengajuan()">
-<option value="atk">ATK (Alat Tulis Kantor)</option>
-<option value="bhp">BHP (Bahan / Barang Habis Pakai)</option>
-</select>
-</div>
+            <div id="unitLoading" class="loading-overlay mb-2">
+              <div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
+              Memuat daftar unit kerja...
+            </div>
 
-<div class="inner-card mb-4">
-<h6 class="fw-bold text-dark mb-3">
-<span class="badge bg-primary me-2">Step 2</span>
-Tambah Item Barang ke Keranjang
-</h6>
+            <select id="dropdownUnit" class="form-select shadow-sm" style="display:none" required>
+              <option value="">-- Pilih Unit Kerja Anda --</option>
+            </select>
 
-<input type="hidden" id="vendorTarget">
-<input type="hidden" id="deskripsiBarang">
-<input type="hidden" id="satuanBarang">
-<input type="hidden" id="merkBarang">
-<input type="hidden" id="hargaBarang">
+            <input type="hidden" id="lokasiUnit">
+          </div>
 
-<div class="mb-3">
-<label class="form-label small mb-1">📦 Pilih Barang / Material ATK/BHP</label>
+          <div class="inner-card mb-4">
+            <h6 class="fw-bold text-dark mb-3">
+              <span class="badge bg-primary me-2">Step 2</span>
+              Tambah Item Barang ke Keranjang
+            </h6>
 
-<div id="materialLoading" class="loading-overlay mb-2">
-<div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
-Memuat database material barang...
-</div>
+            <input type="hidden" id="vendorTarget">
+            <input type="hidden" id="deskripsiBarang">
+            <input type="hidden" id="satuanBarang">
+            <input type="hidden" id="merkBarang">
+            <input type="hidden" id="hargaBarang">
 
-<select id="dropdownMaterial" class="form-select shadow-sm" style="display:none">
-<option value="">-- Pilih Kode & Deskripsi --</option>
-</select>
+            <div class="mb-3">
+              <label class="form-label small mb-1">📦 Pilih Barang / Material</label>
 
-<div id="vendorBadge" class="form-text text-primary fw-bold mt-2" style="font-size:.85rem"></div>
-</div>
+              <div id="materialLoading" class="loading-overlay mb-2">
+                <div class="spinner-border spinner-custom text-primary me-2" role="status"></div>
+                Memuat database material barang...
+              </div>
 
-<div class="mb-3">
-<label class="form-label small mb-1">🔢 Jumlah Permintaan</label>
-<input type="number" id="jumlah" class="form-control shadow-sm" min="1" step="1" placeholder="Masukkan jumlah angka">
-</div>
+              <select id="dropdownMaterial" class="form-select shadow-sm" style="display:none">
+                <option value="">-- Pilih Kode & Deskripsi --</option>
+              </select>
 
-<button type="button" id="btnAdd" class="btn btn-add w-100 fw-bold shadow-sm mt-2">
-➕ Masukkan ke Keranjang
-</button>
-</div>
-</form>
+              <div id="vendorBadge" class="form-text text-primary fw-bold mt-2" style="font-size:.85rem"></div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small mb-1">🔢 Jumlah Permintaan</label>
+              <input type="number" id="jumlah" class="form-control shadow-sm" min="1" step="1" placeholder="Masukkan jumlah angka">
+            </div>
+
+            <button type="button" id="btnAdd" class="btn btn-add w-100 fw-bold shadow-sm mt-2">
+              ➕ Masukkan ke Keranjang
+            </button>
+          </div>
+        </form>
+
         <div id="tabelKeranjangArea" class="card p-3 border-0 bg-light" style="display:none;border-radius:15px">
           <h6 class="fw-bold text-dark mb-3">🛒 Daftar Keranjang Pengajuan Anda:</h6>
 
@@ -250,7 +245,7 @@ Memuat database material barang...
     </div>
   </div>
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyOTPF9Z3AgqrpH2-9U20PtqAgs4yIdcOlv0SqHonRkbpcb5H_E0_U8cF7jEt-0orn_/exec";
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwqY3E8sUH5iaG-CPA0AgHNdNMmhy2UmoW97BKp2WOOSQNXu5y7kafZPVEaYQ4-xaWC/exec";
 
     let globalMaterials = [];
     let globalUnits = [];
@@ -285,7 +280,7 @@ Memuat database material barang...
       const select = document.getElementById("dropdownMaterial");
 
       try {
-       const list = await fetchJson(WEB_APP_URL + "?action=getMaterial");
+        const list = await fetchJson(WEB_APP_URL + "?action=getMaterial");
 
         if (!Array.isArray(list)) {
           throw new Error("Format data material tidak valid.");
@@ -359,14 +354,12 @@ Memuat database material barang...
     function updateMaterialMeta() {
       const value = document.getElementById("dropdownMaterial").value;
       const item = globalMaterials.find(material => String(material.kode) === String(value));
-      const imgContainer = document.getElementById("previewGambarContainer");
-      const imgElement = document.getElementById("previewGambar");
 
       if (!item) {
-        ["vendorTarget", "deskripsiBarang", "satuanBarang", "merkBarang", "hargaBarang"].forEach(id => document.getElementById(id).value = "");
+        ["vendorTarget", "deskripsiBarang", "satuanBarang", "merkBarang", "hargaBarang"]
+          .forEach(id => document.getElementById(id).value = "");
+
         setText("vendorBadge", "");
-        imgContainer.style.display = "none";
-        imgElement.src = "";
         return;
       }
 
@@ -382,17 +375,8 @@ Memuat database material barang...
         "vendorBadge",
         `🏢 Vendor: ${item.vendor ?? "-"} | 💰 Harga: Rp ${harga.toLocaleString("id-ID")}`
       );
-
-      // Tampilkan gambar jika link gambar tersedia
-      if (item.gambar && item.gambar.startsWith("http")) {
-        imgElement.src = item.gambar;
-        imgContainer.style.display = "block";
-      } else {
-        imgContainer.style.display = "none";
-        imgElement.src = "";
-      }
     }
-    
+
     function updateUnitMeta() {
       const value = document.getElementById("dropdownUnit").value;
       const item = globalUnits.find(unit => String(unit.namaUnit) === String(value));
