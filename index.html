@@ -249,11 +249,23 @@ const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzx1am8jR_61_15-Gg9
 let globalMaterials = [];
 let globalUnits = [];
 let keranjangBarang = [];
+let choicesMaterial = null; // Variabel kontrol dropdown pencarian
 
 window.addEventListener("load", () => {
+const materialSelectEl = document.getElementById("dropdownMaterial");
+      choicesMaterial = new Choices(materialSelectEl, {
+        searchEnabled: true,
+        itemSelectText: '',
+        shouldSort: false,
+        placeholder: true,
+        placeholderValue: '-- Pilih atau ketik nama barang --',
+        noResultsText: 'Barang tidak ditemukan',
+        noChoicesText: 'Tidak ada pilihan tersedia'
+      });
 document.getElementById("btnAdd").addEventListener("click", tambahKeDaftar);
 document.getElementById("btnSubmit").addEventListener("click", kirimSemuaData);
 document.getElementById("dropdownMaterial").addEventListener("change", updateMaterialMeta);
+materialSelectEl.addEventListener("change", updateMaterialMeta);
 document.getElementById("dropdownUnit").addEventListener("change", updateUnitMeta);
 
 loadMaterials();
